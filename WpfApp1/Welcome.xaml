@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="WpfApp1.Welcome"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:WpfApp1"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800">
+
+    <Grid>
+        <MediaElement Source="C:\Users\Gebruiker\source\repos\WpfApp1\WpfApp1\Assets\vid.mp4" Name="myMediaElement" Stretch="Fill" />
+
+        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Name="ContentDisplay">
+
+            <!-- Volume slider. This slider allows a Volume range between 0 and 1. -->
+            <TextBlock Foreground="White" VerticalAlignment="Bottom" Margin="20"  >Volume</TextBlock>
+            <Slider Name="volumeSlider" VerticalAlignment="Bottom" Margin="20" ValueChanged="ChangeMediaVolume" 
+                Minimum="0" Maximum="1" Value="0" Width="100"/>
+
+
+        </StackPanel>
+    </Grid>
+</UserControl>
