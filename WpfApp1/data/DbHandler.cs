@@ -53,8 +53,19 @@ namespace WpfApp1.data
             //Return list of strings (Name of teams)
             return colume;
         }
+    
+        public static void StoreTable(string table, string col, string val)
+        {
+            using (SqlConnection connection = new SqlConnection(CnnVal("localDbConnection")))
+            {
+                connection.Open(); //Open connection with sql database
 
+                SqlCommand command = new SqlCommand();
+                command.CommandText = string.Format("INSERT INTO {0} ({1}) VALUES ({2})", table, String.Join(", ", col), String.Join(", ", val));
+                command.Connection = connection;
+                command.ExecuteNonQuery();
 
-
+            }
+        }
     }
 }

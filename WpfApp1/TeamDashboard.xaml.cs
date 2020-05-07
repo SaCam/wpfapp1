@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using WpfApp1.data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,7 +57,7 @@ namespace WpfApp1
                 StackPanelPlaceHolder.Children.Add(ImagePlaceHolder);
                 StackPanelPlaceHolder.Children.Add(TextBlockPlaceHolder);
 
-            
+
                 Btn.Content = "";
                 Btn.Background = Brushes.LightGray;
                 Btn.Content = StackPanelPlaceHolder;
@@ -241,8 +242,24 @@ namespace WpfApp1
                     case 4:
                         InputForm4.Visibility = Visibility.Visible;
                         break;
-                } 
+                }
             }
+        }
+        private void Save(object sender, RoutedEventArgs e)
+        {
+            List<string> col = new List<string>();
+            col.Add("DIG");
+            col.Add("10");
+            col.Add("Sweden");
+            List<string> val = new List<string>();
+            val.Add("Name");
+            val.Add("Rank");
+            val.Add("Country");
+
+            String StrCol = string.Join(", ", col);
+            String StrVal = string.Join(", ", val);
+
+            data.DbHandler.StoreTable("Team", StrCol, StrVal);
         }
     }
 }
