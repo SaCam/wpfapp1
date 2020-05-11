@@ -32,7 +32,7 @@ namespace WpfApp1
             _context = context;
         }
 
-        private void SetPlaceHolders()
+        public void SetPlaceHolders()
         {
             // Player Button Place holders --------------------------------------
             List<Button> PlayerButtons = new List<Button>();
@@ -117,39 +117,35 @@ namespace WpfApp1
             TeamButton.Content = StackPanelPlaceHolderTeam;
 
             //Form Place Holder -------------------------------------
+            Player0.Text = "";
+            Player1.Text = "";
+            Player2.Text = "";
+            Player3.Text = "";
+            Player4.Text = "";
 
-            List<StackPanel> PlayerForms = new List<StackPanel>();
-            PlayerForms.Add(InputForm0);
-            PlayerForms.Add(InputForm1);
-            PlayerForms.Add(InputForm2);
-            PlayerForms.Add(InputForm3);
-            PlayerForms.Add(InputForm4);
+            Age0.Text = "";
+            Age1.Text = "";
+            Age2.Text = "";
+            Age3.Text = "";
+            Age4.Text = "";
 
-            foreach (StackPanel stack in PlayerForms)
-            {
-                stack.Children.Clear();
+            Country0.Text = "";
+            Country1.Text = "";
+            Country2.Text = "";
+            Country3.Text = "";
+            Country4.Text = "";
 
-                TextBlock TextBlockName = new TextBlock();
-                TextBlockName.Text = "Name:";
-                TextBox TextBoxName = new TextBox();
+            InputForm0.Visibility = Visibility.Hidden;
+            InputForm1.Visibility = Visibility.Hidden;
+            InputForm2.Visibility = Visibility.Hidden;
+            InputForm3.Visibility = Visibility.Hidden;
+            InputForm4.Visibility = Visibility.Hidden;
 
-                TextBlock TextBlockAge = new TextBlock();
-                TextBlockAge.Text = "Age:";
-                TextBox TextBoxAge = new TextBox();
-
-                TextBlock TextBlockNationality = new TextBlock();
-                TextBlockNationality.Text = "Nationality:";
-                TextBox TextBoxNationality = new TextBox();
-
-                stack.Children.Add(TextBlockName);
-                stack.Children.Add(TextBoxName);
-                stack.Children.Add(TextBlockAge);
-                stack.Children.Add(TextBoxAge);
-                stack.Children.Add(TextBlockNationality);
-                stack.Children.Add(TextBoxNationality);
-
-                stack.Visibility = Visibility.Hidden;
-            }
+            //reset TeamForm
+            TeamName.Text = "";
+            TeamRank.Text = "";
+            TeamCountry.Text = "";
+            TeamForm.Visibility = Visibility.Hidden;
 
         }
 
@@ -181,6 +177,11 @@ namespace WpfApp1
                 BtnClicked.Background = Brushes.Transparent;
 
             }
+
+            //Show TeamInputForm
+            TeamForm.Visibility = Visibility.Visible;
+
+
         }
 
         private void ShowInputForm(object sender, RoutedEventArgs e)
@@ -245,21 +246,22 @@ namespace WpfApp1
                 }
             }
         }
-        private void Save(object sender, RoutedEventArgs e)
-        {
-            List<string> col = new List<string>();
-            col.Add("DIG");
-            col.Add("10");
-            col.Add("Sweden");
-            List<string> val = new List<string>();
-            val.Add("Name");
-            val.Add("Rank");
-            val.Add("Country");
+        private void Submit(object sender, RoutedEventArgs e)
+        { 
+            //add team
+            data.DbHandler.StoreTable("Team", "name,rank,country", String.Format("'{0}',{1},'{2}'", TeamName.Text, TeamRank.Text, TeamCountry.Text));
+            //get Team id 
+            int team_id = data.DbHandler.Qid(TeamName.Text);
+            //Add player
+            data.DbHandler.StoreTable("Player", "name,age,country,team_id", String.Format("'{0}',{1},'{2}',{3}", Player0.Text, Age0.Text, Country0.Text, team_id));
+            data.DbHandler.StoreTable("Player", "name,age,country,team_id", String.Format("'{0}',{1},'{2}',{3}", Player1.Text, Age1.Text, Country1.Text, team_id));
+            data.DbHandler.StoreTable("Player", "name,age,country,team_id", String.Format("'{0}',{1},'{2}',{3}", Player2.Text, Age2.Text, Country2.Text, team_id));
+            data.DbHandler.StoreTable("Player", "name,age,country,team_id", String.Format("'{0}',{1},'{2}',{3}", Player3.Text, Age3.Text, Country3.Text, team_id));
+            data.DbHandler.StoreTable("Player", "name,age,country,team_id", String.Format("'{0}',{1},'{2}',{3}", Player4.Text, Age4.Text, Country4.Text, team_id));
+            //reset place holders
+            SetPlaceHolders();
 
-            String StrCol = string.Join(", ", col);
-            String StrVal = string.Join(", ", val);
-
-            data.DbHandler.StoreTable("Team", StrCol, StrVal);
+            ((MainWindow)System.Windows.Application.Current.MainWindow).UpdateLayout();
         }
     }
 }

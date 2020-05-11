@@ -53,15 +53,34 @@ namespace WpfApp1.data
             //Return list of strings (Name of teams)
             return colume;
         }
-    
+
+        ////////////////Row from Database///////////////////
+        public static int Qid(string name)
+        {
+            int id = new int();
+            //Using closes connection automatically
+            using (SqlConnection connection = new SqlConnection(CnnVal("localDbConnection")))
+            {
+                //Open SQL connection (asynic)
+                connection.Open();
+
+                //Create sql command
+                SqlCommand command = new SqlCommand(string.Format("SELECT id FROM Team WHERE name='{0}'", name), connection);
+
+                //execute here
+                id = Convert.ToInt32(command.ExecuteScalar());
+            }
+            //Return list of strings (Name of teams)
+            return id;
+        }
+
         public static void StoreTable(string table, string col, string val)
         {
             using (SqlConnection connection = new SqlConnection(CnnVal("localDbConnection")))
             {
                 connection.Open(); //Open connection with sql database
-
                 SqlCommand command = new SqlCommand();
-                command.CommandText = string.Format("INSERT INTO {0} ({1}) VALUES ({2})", table, String.Join(", ", col), String.Join(", ", val));
+                command.CommandText = string.Format("INSERT INTO {0} ({1}) VALUES ({2})", table, col, val);
                 command.Connection = connection;
                 command.ExecuteNonQuery();
 

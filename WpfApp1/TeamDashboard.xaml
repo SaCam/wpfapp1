@@ -47,24 +47,75 @@
             <Button Background="#2b6ea4" Foreground="White" Margin="10 0 10 10" Click="ResetPlaceHolders">
                 <TextBlock>Clear</TextBlock>
             </Button>
-            <Button Background="#2b6ea4" Foreground="White" Margin="10 0 10 10" Click="Save">
+            <Button Background="#2b6ea4" Foreground="White" Margin="10 0 10 10" Click="Submit">
                 <TextBlock>Submit</TextBlock>
             </Button>
         </StackPanel>
 
         <StackPanel Grid.Row="1" Grid.Column="0" Margin="10 0 5 0" Visibility="Hidden" Name="InputForm0">
+            <TextBlock Text="Name:"></TextBlock>
+            <TextBox Name="Player0"></TextBox>
+            
+            <TextBlock Text="Age:"></TextBlock>
+            <TextBox Name="Age0"></TextBox>
+            
+            <TextBlock Text="Country:"></TextBlock>
+            <TextBox Name="Country0"></TextBox>
         </StackPanel>
 
         <StackPanel Grid.Row="1" Grid.Column="1" Margin="5 0 5 0" Visibility="Hidden" Name="InputForm1">
+            <TextBlock Text="Name:"></TextBlock>
+            <TextBox Name="Player1"></TextBox>
+
+            <TextBlock Text="Age:"></TextBlock>
+            <TextBox Name="Age1"></TextBox>
+
+            <TextBlock Text="Country:"></TextBlock>
+            <TextBox Name="Country1"></TextBox>
         </StackPanel>
 
         <StackPanel Grid.Row="1" Grid.Column="2" Margin="5 0 5 0" Visibility="Hidden" Name="InputForm2">
+            <TextBlock Text="Name:"></TextBlock>
+            <TextBox Name="Player2"></TextBox>
+
+            <TextBlock Text="Age:"></TextBlock>
+            <TextBox Name="Age2"></TextBox>
+
+            <TextBlock Text="Country:"></TextBlock>
+            <TextBox Name="Country2"></TextBox>
         </StackPanel>
 
         <StackPanel Grid.Row="1" Grid.Column="3" Margin="5 0 5 0" Visibility="Hidden" Name="InputForm3">
+            <TextBlock Text="Name:"></TextBlock>
+            <TextBox Name="Player3"></TextBox>
+
+            <TextBlock Text="Age:"></TextBlock>
+            <TextBox Name="Age3"></TextBox>
+
+            <TextBlock Text="Country:"></TextBlock>
+            <TextBox Name="Country3"></TextBox>
         </StackPanel>
 
         <StackPanel Grid.Row="1" Grid.Column="4" Margin="5 0 10 0" Visibility="Hidden" Name="InputForm4">
+            <TextBlock Text="Name:"></TextBlock>
+            <TextBox Name="Player4"></TextBox>
+
+            <TextBlock Text="Age:"></TextBlock>
+            <TextBox Name="Age4"></TextBox>
+
+            <TextBlock Text="Country:"></TextBlock>
+            <TextBox Name="Country4"></TextBox>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Grid.Column="1" Margin="5 0 10 0" Visibility="Hidden" Name="TeamForm">
+            <TextBlock Text="Team Name:"></TextBlock>
+            <TextBox Name="TeamName"></TextBox>
+            
+            <TextBlock Text="Team Rank:"></TextBlock>
+            <TextBox Name="TeamRank"></TextBox>
+            
+            <TextBlock Text="Team Country:"></TextBlock>
+            <TextBox Name="TeamCountry"></TextBox>
         </StackPanel>
 
         <Button Grid.Row="2" Grid.Column="0" Margin="10 0 5 10" Click="CreateTeamBackground" Name="TeamButton">
