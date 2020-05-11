@@ -261,7 +261,7 @@ namespace WpfApp1
             //reset place holders
             SetPlaceHolders();
 
-            ((MainWindow)System.Windows.Application.Current.MainWindow).UpdateLayout();
+            _context.InitMenu();
         }
     }
 }

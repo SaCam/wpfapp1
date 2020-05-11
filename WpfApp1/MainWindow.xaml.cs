@@ -23,7 +23,8 @@ namespace WpfApp1
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
-    {
+    {        
+
         public MainWindow()
         {
             InitializeComponent();
@@ -33,6 +34,13 @@ namespace WpfApp1
             //Set frame to welcome content
             Content.Children.Add(new Welcome());
 
+            //initialize Menu
+            InitMenu();
+        }
+
+        public void InitMenu()
+        {
+            Menu.Children.Clear();
             //create List of SubItem Objects
             var menuTeam = new List<SubItem>();
             //Loop through all teams <String> returned by Query
@@ -61,7 +69,7 @@ namespace WpfApp1
 
             //Hardcoded Dashboard 
             var menuDashboard = new List<SubItem>();
-            menuDashboard.Add(new SubItem("Add Team", new TeamDashboard()));
+            menuDashboard.Add(new SubItem("Add Team", new TeamDashboard(this)));
             menuDashboard.Add(new SubItem("Add Tournament", new TournamentDashboard()));
             menuDashboard.Add(new SubItem("Add Highlights", new HighlightDashboard()));
             var item3 = new ItemMenu("Dashboard", menuDashboard);
