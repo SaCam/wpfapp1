@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using WpfApp1.data;
+using WpfApp1.classBin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,47 +23,75 @@ namespace WpfApp1
     /// </summary>
     public partial class TeamDashboard : UserControl
     {
-        MainWindow _context;
+        //Class properties
+        private static MainWindow _context { get; set; } //Mainwindow instance
+        private static List<Button> playerButtons { get; set; } = new List<Button>(); //List with button place holders
+        private static List<Player> Players { get; set; } = new List<Player>();
+        private static int teamId { get; set; }
+
+        //Class delegates
+        public delegate void Layout(Button UI); //returns nothing, but takes a button as parameter
 
         public TeamDashboard(MainWindow context = null)
         {
-            InitializeComponent();
-            SetPlaceHolders();
-
             _context = context;
+
+            InitializeComponent();
+
+            CreatePlayerBtnList();
+
+            SetBtnLayout(DefaultPlayerBtnContent, playerButtons); //Set player btn layout
+            SetBtnLayout(DefaultIglBtnContent, new List<Button>{ Button3 }); //Igl Button
+            SetBtnLayout(DefaultTeamBtnContent, new List<Button> { TeamButton }); // Set TeamButton content
+
+            ClearForm();
         }
 
-        public void SetPlaceHolders()
+        public void CreatePlayerBtnList()
+            //Adds buttons from WPF to list
         {
-            // Player Button Place holders --------------------------------------
-            List<Button> PlayerButtons = new List<Button>();
-            PlayerButtons.Add(Button1);
-            PlayerButtons.Add(Button2);
-            PlayerButtons.Add(Button4);
-            PlayerButtons.Add(Button5);
+            playerButtons.Add(Button1); //Player button 1
+            playerButtons.Add(Button2);
+            playerButtons.Add(Button4);
+            playerButtons.Add(Button5);
+        }
 
-            //Loop through buttons in list
-            foreach (Button Btn in PlayerButtons)
+        public void DefaultPlayerBtnContent(Button btn)
+            //Create a layout to be applied to a button
+        {
+            //Create placeholders
+            StackPanel playerLayout = new StackPanel();
+            Image ImagePlaceHolder = new Image();
+            TextBlock TextBlockPlaceHolder = new TextBlock();
+
+            //Configure placeholders
+            ImagePlaceHolder.Source = new BitmapImage(new Uri("/Assets/add_player.png", UriKind.RelativeOrAbsolute));
+            ImagePlaceHolder.Height = 40;
+            TextBlockPlaceHolder.Text = "Add Player";
+
+            playerLayout.Children.Add(ImagePlaceHolder);
+            playerLayout.Children.Add(TextBlockPlaceHolder);
+
+            //Button layout
+            btn.Content = "";
+            btn.Background = Brushes.LightGray;
+            btn.Content = playerLayout;
+        }
+
+        public void SetBtnLayout(Layout layout, List<Button> buttons)
+            //Apply layout to buttons in playerButton
+            //use Layout delegate, so layout function has to returen an object
+        {
+            foreach (Button Btn in buttons)
+                //Loop through buttons in list and set passed layout to it
             {
-                //Create placeholders
-                StackPanel StackPanelPlaceHolder = new StackPanel();
-                Image ImagePlaceHolder = new Image();
-                TextBlock TextBlockPlaceHolder = new TextBlock();
-
-                //Configure placeholders
-                ImagePlaceHolder.Source = new BitmapImage(new Uri("/Assets/add_player.png", UriKind.RelativeOrAbsolute));
-                ImagePlaceHolder.Height = 40;
-                TextBlockPlaceHolder.Text = "Add Player";
-
-                StackPanelPlaceHolder.Children.Add(ImagePlaceHolder);
-                StackPanelPlaceHolder.Children.Add(TextBlockPlaceHolder);
-
-
-                Btn.Content = "";
-                Btn.Background = Brushes.LightGray;
-                Btn.Content = StackPanelPlaceHolder;
+                layout(Btn);
             }
+        }
 
+        private void DefaultIglBtnContent(Button btn)
+            //Igl button content
+        {
             //IGL place Holder ---------------------------------------
             StackPanel IglStackPanelPlaceHolder = new StackPanel();
             Image IglImagePlaceHolder = new Image();
@@ -90,15 +119,15 @@ namespace WpfApp1
             grid.Children.Add(IglStackPanelPlaceHolder);
             grid.Children.Add(IglImagePlaceHolderLogo);
 
-            Button3.Content = "";
-            Button3.Background = Brushes.LightGray;
-            Button3.Content = grid;
-            Button3.HorizontalContentAlignment = HorizontalAlignment.Stretch;
-            Button3.VerticalContentAlignment = VerticalAlignment.Stretch;
+            btn.Content = "";
+            btn.Background = Brushes.LightGray;
+            btn.Content = grid;
+            btn.HorizontalContentAlignment = HorizontalAlignment.Stretch;
+            btn.VerticalContentAlignment = VerticalAlignment.Stretch;
+        }
 
-            //Team Button Place Holder -----------------------------------------
-            TeamButton.Content = "";
-
+        private void DefaultTeamBtnContent(Button btn)
+        {
             //Create placeholders
             StackPanel StackPanelPlaceHolderTeam = new StackPanel();
             Image ImagePlaceHolderTeam = new Image();
@@ -112,10 +141,13 @@ namespace WpfApp1
             StackPanelPlaceHolderTeam.Children.Add(ImagePlaceHolderTeam);
             StackPanelPlaceHolderTeam.Children.Add(TextBlockPlaceHolderTeam);
 
-            TeamButton.Content = "";
-            TeamButton.Background = Brushes.LightGray;
-            TeamButton.Content = StackPanelPlaceHolderTeam;
+            btn.Content = "";
+            btn.Background = Brushes.LightGray;
+            btn.Content = StackPanelPlaceHolderTeam;
+        }
 
+        public void ClearForm()
+        {
             //Form Place Holder -------------------------------------
             Player0.Text = "";
             Player1.Text = "";
@@ -146,12 +178,16 @@ namespace WpfApp1
             TeamRank.Text = "";
             TeamCountry.Text = "";
             TeamForm.Visibility = Visibility.Hidden;
-
         }
 
         public void ResetPlaceHolders(object sender, RoutedEventArgs e)
+            //Reset all buttons
         {
-            SetPlaceHolders();
+            SetBtnLayout(DefaultPlayerBtnContent, playerButtons); //Reset player btns to default
+            SetBtnLayout(DefaultIglBtnContent, new List<Button> { Button3 }); //Reset Igl button to default
+            SetBtnLayout(DefaultTeamBtnContent, new List<Button> { TeamButton }); // Set TeamButton content
+
+            ClearForm(); //Clears the forms
         }
 
         private void CreateTeamBackground(object sender, RoutedEventArgs e)
@@ -246,22 +282,45 @@ namespace WpfApp1
                 }
             }
         }
-        private void Submit(object sender, RoutedEventArgs e)
-        { 
+
+        private void SetPlayerData()
+            //asign data from form to player object
+        {
+            Players.Clear();
+
+            Players.Add(new Player(Player0.Text, Age0.Text, Country0.Text, teamId));
+            Players.Add(new Player(Player1.Text, Age1.Text, Country1.Text, teamId));
+            Players.Add(new Player(Player2.Text, Age2.Text, Country2.Text, teamId));
+            Players.Add(new Player(Player3.Text, Age3.Text, Country3.Text, teamId));
+            Players.Add(new Player(Player4.Text, Age4.Text, Country4.Text, teamId));
+        }
+
+        private void SaveForm()
+            //Save team and players to database
+        {
             //add team
             data.DbHandler.StoreTable("Team", "name,rank,country", String.Format("'{0}',{1},'{2}'", TeamName.Text, TeamRank.Text, TeamCountry.Text));
-            //get Team id 
-            int team_id = data.DbHandler.Qid(TeamName.Text);
-            //Add player
-            data.DbHandler.StoreTable("Player", "name,age,country,team_id", String.Format("'{0}',{1},'{2}',{3}", Player0.Text, Age0.Text, Country0.Text, team_id));
-            data.DbHandler.StoreTable("Player", "name,age,country,team_id", String.Format("'{0}',{1},'{2}',{3}", Player1.Text, Age1.Text, Country1.Text, team_id));
-            data.DbHandler.StoreTable("Player", "name,age,country,team_id", String.Format("'{0}',{1},'{2}',{3}", Player2.Text, Age2.Text, Country2.Text, team_id));
-            data.DbHandler.StoreTable("Player", "name,age,country,team_id", String.Format("'{0}',{1},'{2}',{3}", Player3.Text, Age3.Text, Country3.Text, team_id));
-            data.DbHandler.StoreTable("Player", "name,age,country,team_id", String.Format("'{0}',{1},'{2}',{3}", Player4.Text, Age4.Text, Country4.Text, team_id));
-            //reset place holders
-            SetPlaceHolders();
 
-            _context.InitMenu();
+            //get Team id 
+            teamId = data.DbHandler.Qid(TeamName.Text);
+
+            //Add players
+            foreach (Player player in Players)
+            {
+                data.DbHandler.StoreTable("Player", "name,age,country,team_id", $"'{player.Name}',{player.Age},'{player.Country}',{teamId}");
+            }
+        }
+
+        private void Submit(object sender, RoutedEventArgs e)
+            //When submit is pressed perform these actions
+        {
+            SetPlayerData();
+
+            SaveForm();
+
+            ResetPlaceHolders(sender, e);
+
+            _context.ReinitMenu();
         }
     }
 }

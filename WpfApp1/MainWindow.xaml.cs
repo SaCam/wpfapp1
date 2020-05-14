@@ -23,66 +23,87 @@ namespace WpfApp1
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
-    {        
+    {
+        //Class properties
+        public static List<ItemMenu> itemMenuList { get; set; } = new List<ItemMenu>();
 
         public MainWindow()
         {
             InitializeComponent();
-            //Instance variables
-            string cwd = Directory.GetCurrentDirectory();
 
             //Set frame to welcome content
             Content.Children.Add(new Welcome());
 
             //initialize Menu
+            CreateItems();
             InitMenu();
         }
 
-        public void InitMenu()
+        public void ReinitMenu()
+            //Clears Items from Menu
         {
+            itemMenuList.Clear();
+
+            CreateItems();
+
             Menu.Children.Clear();
-            //create List of SubItem Objects
+
+            InitMenu();
+        }
+
+        public void CreateItems()
+            //Creates a list of ItemMenu's
+        {
             var menuTeam = new List<SubItem>();
-            //Loop through all teams <String> returned by Query
-            foreach (string Team in data.DbHandler.QTable("name", "Team"))
-            {
-                menuTeam.Add(new SubItem(Team)); //Add to List
-            }
-            var item0 = new ItemMenu("Teams", menuTeam); //create variable of ItemMenu Object
-
-
-            //Query Tournaments table and populate XAML element
             var menuTournaments = new List<SubItem>();
-            foreach (string Team in data.DbHandler.QTable("name", "Tournament"))
-            {
-                menuTournaments.Add(new SubItem(Team)); //Add to List
-            }
-            var item1 = new ItemMenu("Tournaments", menuTournaments);
-
-            //Query Highlight table and populate XAML element (Table not available so query team table for now)
             var menuHighlights = new List<SubItem>();
-            foreach (string Tour in data.DbHandler.QTable("name", "Team"))
-            {
-                menuHighlights.Add(new SubItem(Tour));
-            }
-            var item2 = new ItemMenu("Highlights", menuHighlights);
 
             //Hardcoded Dashboard 
             var menuDashboard = new List<SubItem>();
             menuDashboard.Add(new SubItem("Add Team", new TeamDashboard(this)));
             menuDashboard.Add(new SubItem("Add Tournament", new TournamentDashboard()));
             menuDashboard.Add(new SubItem("Add Highlights", new HighlightDashboard()));
-            var item3 = new ItemMenu("Dashboard", menuDashboard);
+            ItemMenu item0 = new ItemMenu("Dashboard", menuDashboard);
 
-            //Add to UI at x:Name="Menu"
-            Menu.Children.Add(new UserControlMenuItem(item3, this));
-            Menu.Children.Add(new UserControlMenuItem(item0, this));
-            Menu.Children.Add(new UserControlMenuItem(item1, this));
-            Menu.Children.Add(new UserControlMenuItem(item2, this));
+            //Loop through all teams <String> returned by Query
+            foreach (string Team in data.DbHandler.QTable("name", "Team"))
+            {
+                menuTeam.Add(new SubItem(Team)); //Add to List
+            }
+            ItemMenu item1 = new ItemMenu("Teams", menuTeam); //create variable of ItemMenu Object
+
+            //Query Tournaments table and populate XAML element
+            foreach (string Team in data.DbHandler.QTable("name", "Tournament"))
+            {
+                menuTournaments.Add(new SubItem(Team)); //Add to List
+            }
+            ItemMenu item2 = new ItemMenu("Tournaments", menuTournaments);
+
+            //Query Highlight table and populate XAML element (Table not available so query team table for now)
+            foreach (string Tour in data.DbHandler.QTable("name", "Team"))
+            {
+                menuHighlights.Add(new SubItem(Tour));
+            }
+            ItemMenu item3 = new ItemMenu("Highlights", menuHighlights);
+
+            itemMenuList.Add(item0);
+            itemMenuList.Add(item1);
+            itemMenuList.Add(item2);
+            itemMenuList.Add(item3);
         }
 
-        //function to change content in client is linked to dynamically created elements
+        public void InitMenu()
+            //Adds items from itemMenuList to UI Menu
+        {
+            foreach (var item in itemMenuList)
+                //Add to UI at x:Name="Menu"
+            {
+                Menu.Children.Add(new UserControlMenuItem(item, this));
+            }
+        }
+
         internal void SwitchScreen(object sender,string TitleText)
+            //function to change content in client is linked to dynamically created elements
         {
             var screen = ((UserControl)sender);
             if (screen != null)
@@ -95,20 +116,20 @@ namespace WpfApp1
         }
 
         //Window control buttons title bar
-        //Close button function
         private void CloseButton_Click(object sender, RoutedEventArgs e)
+            //Close button function
         {
             Close();
         }
 
-        //Minimize button
         private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+            //Minimize button
         {
             this.WindowState = WindowState.Minimized;
         }
 
-        //Maximize button
         private void MaximizeButton_Click(object sender, RoutedEventArgs e)
+            //Maximize button
         {
             if (this.WindowState == WindowState.Normal)
             {
@@ -119,8 +140,9 @@ namespace WpfApp1
                 this.WindowState = WindowState.Normal;
             }
         }
-        //draggable window
+
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+            //draggable window
         {
             if (e.ChangedButton == MouseButton.Left)
                 this.DragMove();

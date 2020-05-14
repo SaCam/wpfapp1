@@ -1,0 +1,124 @@
+﻿<UserControl x:Class="WpfApp1.BrowseTeam"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WpfApp1"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Button BorderThickness="1" Grid.Row="0" Grid.Column="0" Margin="10 0 5 0" Click="ShowInputForm" Name="Button1">
+        </Button>
+
+        <Button BorderThickness="1" Grid.Row="0" Grid.Column="1" Margin="5 0 5 0" Click="ShowInputForm" Name="Button2">
+        </Button>
+
+        <Button Grid.Row="0" Grid.Column="2" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="5 0 5 0" Click="ShowInputForm" Name="Button3">
+            <Grid>
+                <StackPanel VerticalAlignment="Center">
+                    <Image Source="{StaticResource AddPlayerIcon}" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBlock Background="Transparent" HorizontalAlignment="Center">Add Player</TextBlock>
+                </StackPanel>
+                <Image Source="/Assets/igl.png" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="20"/>
+            </Grid>
+        </Button>
+
+
+        <Button BorderThickness="1" Grid.Row="0" Grid.Column="3" Margin="5 0 5 0" Click="ShowInputForm" Name="Button4">
+        </Button>
+
+        <Button BorderThickness="1" Grid.Row="0" Grid.Column="4" Margin="5 0 10 0" Click="ShowInputForm" Name="Button5">
+        </Button>
+
+        <StackPanel Grid.Row="2" Grid.Column="4" Margin="10 0 10 10" VerticalAlignment="Bottom">
+            <Button Background="#2b6ea4" Foreground="White" Margin="10 0 10 10" Click="ResetPlaceHolders">
+                <TextBlock>Clear</TextBlock>
+            </Button>
+            <Button Background="#2b6ea4" Foreground="White" Margin="10 0 10 10" Click="Submit">
+                <TextBlock>Submit</TextBlock>
+            </Button>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Grid.Column="0" Margin="10 0 5 0" Visibility="Hidden" Name="InputForm0">
+            <TextBlock Text="Name:"></TextBlock>
+            <TextBox Name="Player0"></TextBox>
+
+            <TextBlock Text="Age:"></TextBlock>
+            <TextBox Name="Age0"></TextBox>
+
+            <TextBlock Text="Country:"></TextBlock>
+            <TextBox Name="Country0"></TextBox>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Grid.Column="1" Margin="5 0 5 0" Visibility="Hidden" Name="InputForm1">
+            <TextBlock Text="Name:"></TextBlock>
+            <TextBox Name="Player1"></TextBox>
+
+            <TextBlock Text="Age:"></TextBlock>
+            <TextBox Name="Age1"></TextBox>
+
+            <TextBlock Text="Country:"></TextBlock>
+            <TextBox Name="Country1"></TextBox>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Grid.Column="2" Margin="5 0 5 0" Visibility="Hidden" Name="InputForm2">
+            <TextBlock Text="Name:"></TextBlock>
+            <TextBox Name="Player2"></TextBox>
+
+            <TextBlock Text="Age:"></TextBlock>
+            <TextBox Name="Age2"></TextBox>
+
+            <TextBlock Text="Country:"></TextBlock>
+            <TextBox Name="Country2"></TextBox>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Grid.Column="3" Margin="5 0 5 0" Visibility="Hidden" Name="InputForm3">
+            <TextBlock Text="Name:"></TextBlock>
+            <TextBox Name="Player3"></TextBox>
+
+            <TextBlock Text="Age:"></TextBlock>
+            <TextBox Name="Age3"></TextBox>
+
+            <TextBlock Text="Country:"></TextBlock>
+            <TextBox Name="Country3"></TextBox>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Grid.Column="4" Margin="5 0 10 0" Visibility="Hidden" Name="InputForm4">
+            <TextBlock Text="Name:"></TextBlock>
+            <TextBox Name="Player4"></TextBox>
+
+            <TextBlock Text="Age:"></TextBlock>
+            <TextBox Name="Age4"></TextBox>
+
+            <TextBlock Text="Country:"></TextBlock>
+            <TextBox Name="Country4"></TextBox>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Grid.Column="1" Margin="5 0 10 0" Visibility="Hidden" Name="TeamForm">
+            <TextBlock Text="Team Name:"></TextBlock>
+            <TextBox Name="TeamName"></TextBox>
+
+            <TextBlock Text="Team Rank:"></TextBlock>
+            <TextBox Name="TeamRank"></TextBox>
+
+            <TextBlock Text="Team Country:"></TextBlock>
+            <TextBox Name="TeamCountry"></TextBox>
+        </StackPanel>
+
+        <Button Grid.Row="2" Grid.Column="0" Margin="10 0 5 10" Click="CreateTeamBackground" Name="TeamButton">
+        </Button>
+    </Grid>
+</UserControl>
