@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using WpfApp1.data;
+
 using WpfApp1.classBin;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Drawing.Imaging;
 
 namespace WpfApp1
 {
@@ -26,7 +28,7 @@ namespace WpfApp1
         //Class properties
         private static MainWindow _context { get; set; } //Mainwindow instance
         private static List<Button> playerButtons { get; set; } = new List<Button>(); //List with button place holders
-        private static List<Player> Players { get; set; } = new List<Player>();
+        private static Dictionary<string, Player> players { get; set; } = new Dictionary<string, Player>(); //Dictionary with players
         private static int teamId { get; set; }
 
         //Class delegates
@@ -41,8 +43,10 @@ namespace WpfApp1
             CreatePlayerBtnList();
 
             SetBtnLayout(DefaultPlayerBtnContent, playerButtons); //Set player btn layout
-            SetBtnLayout(DefaultIglBtnContent, new List<Button>{ Button3 }); //Igl Button
+            SetBtnLayout(DefaultIglBtnContent, new List<Button>{ Button2 }); //Igl Button
             SetBtnLayout(DefaultTeamBtnContent, new List<Button> { TeamButton }); // Set TeamButton content
+
+            PopulatePlayerDict();
 
             ClearForm();
         }
@@ -50,10 +54,10 @@ namespace WpfApp1
         public void CreatePlayerBtnList()
             //Adds buttons from WPF to list
         {
-            playerButtons.Add(Button1); //Player button 1
-            playerButtons.Add(Button2);
+            playerButtons.Add(Button0); //Player button 1
+            playerButtons.Add(Button1);
+            playerButtons.Add(Button3);
             playerButtons.Add(Button4);
-            playerButtons.Add(Button5);
         }
 
         public void DefaultPlayerBtnContent(Button btn)
@@ -184,7 +188,7 @@ namespace WpfApp1
             //Reset all buttons
         {
             SetBtnLayout(DefaultPlayerBtnContent, playerButtons); //Reset player btns to default
-            SetBtnLayout(DefaultIglBtnContent, new List<Button> { Button3 }); //Reset Igl button to default
+            SetBtnLayout(DefaultIglBtnContent, new List<Button> { Button2 }); //Reset Igl button to default
             SetBtnLayout(DefaultTeamBtnContent, new List<Button> { TeamButton }); // Set TeamButton content
 
             ClearForm(); //Clears the forms
@@ -211,7 +215,6 @@ namespace WpfApp1
                 //add to button
                 BtnClicked.Content = NewImage;
                 BtnClicked.Background = Brushes.Transparent;
-
             }
 
             //Show TeamInputForm
@@ -222,14 +225,8 @@ namespace WpfApp1
 
         private void ShowInputForm(object sender, RoutedEventArgs e)
         {
-            //to get name of element
-            //var mouseWasDownOn = e.Source as FrameworkElement;
-            //if (mouseWasDownOn != null)
-            //{
-            //    string elementName = mouseWasDownOn.Name;
-            //    Console.WriteLine(elementName);
-            //}
-
+            string btnName = ((Button)sender).Name;
+            char lastChar = btnName[btnName.Length - 1];
             //Open File Dialog to select picture
             OpenFileDialog op = new OpenFileDialog();
             op.Title = "Select a picture";
@@ -255,6 +252,7 @@ namespace WpfApp1
                 //add to button
                 BtnClicked.Content = NewImage;
                 BtnClicked.Background = Brushes.Transparent;
+                players[$"player{lastChar}"].Img = DbHandler.ImageToByteArray(System.Drawing.Image.FromFile(op.FileName));
             }
 
             //Show correct input form
@@ -283,40 +281,59 @@ namespace WpfApp1
             }
         }
 
-        private void SetPlayerData()
-            //asign data from form to player object
+        private void LostFocusText(object sender, RoutedEventArgs e)
+            //When Focus is lost on a textbox, the text will be set to a player instance.
         {
-            Players.Clear();
+            UIElementCollection stackpanel = ((StackPanel)sender).Children;
+            TextBox name = (TextBox)stackpanel[1];
+            TextBox age = (TextBox)stackpanel[3];
+            TextBox country = (TextBox)stackpanel[5];
 
-            Players.Add(new Player(Player0.Text, Age0.Text, Country0.Text, teamId));
-            Players.Add(new Player(Player1.Text, Age1.Text, Country1.Text, teamId));
-            Players.Add(new Player(Player2.Text, Age2.Text, Country2.Text, teamId));
-            Players.Add(new Player(Player3.Text, Age3.Text, Country3.Text, teamId));
-            Players.Add(new Player(Player4.Text, Age4.Text, Country4.Text, teamId));
+            string stackPanelName = ((StackPanel)sender).Name;
+            char lastChar = stackPanelName[stackPanelName.Length - 1];
+
+            players[$"player{lastChar}"].Name = name.Text;
+            players[$"player{lastChar}"].Age = age.Text;
+            players[$"player{lastChar}"].Country = country.Text;
         }
 
-        private void SaveForm()
+        private void PopulatePlayerDict()
+            //Populate the players Dict with Player instances.
+        {
+            players.Clear();
+            for (var i = 0; i < 5; i++)
+                //Loop a total of 5 times to create 5 instances.
+            {
+                players.Add($"player{i}", new Player());
+            }
+            Console.WriteLine(players.Count);
+        }
+
+        private void SaveData()
             //Save team and players to database
         {
             //add team
-            data.DbHandler.StoreTable("Team", "name,rank,country", String.Format("'{0}',{1},'{2}'", TeamName.Text, TeamRank.Text, TeamCountry.Text));
+            DbHandler.StoreTable("Team", "name,rank,country", String.Format("'{0}',{1},'{2}'", TeamName.Text, TeamRank.Text, TeamCountry.Text));
 
             //get Team id 
-            teamId = data.DbHandler.Qid(TeamName.Text);
+            teamId = DbHandler.Qid(TeamName.Text);
 
             //Add players
-            foreach (Player player in Players)
+            foreach (KeyValuePair<string, Player> player in players)
             {
-                data.DbHandler.StoreTable("Player", "name,age,country,team_id", $"'{player.Name}',{player.Age},'{player.Country}',{teamId}");
+                DbHandler.StoreTable("player", "name,age,country,team_id,image", 
+                    $"'{player.Value.Name}'," +
+                    $"{player.Value.Age}," +
+                    $"'{player.Value.Country}'," +
+                    $"{teamId}," +
+                    $"{player.Value.Img}");
             }
         }
 
         private void Submit(object sender, RoutedEventArgs e)
             //When submit is pressed perform these actions
         {
-            SetPlayerData();
-
-            SaveForm();
+            SaveData();
 
             ResetPlaceHolders(sender, e);
 

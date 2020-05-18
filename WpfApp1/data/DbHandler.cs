@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +21,19 @@ namespace WpfApp1.data
             return ConfigurationManager.ConnectionStrings[name].ConnectionString; //return string as defined in App.config
         }
 
-        
+        /// <summary>
+        /// Rerturns string with relative path from app.config
+        /// </summary>
+        /// <returns></returns>
+        public static string GetConStr()
+        {
+            ConnectionStringSettings c = ConfigurationManager.ConnectionStrings["localDbConnection"];
+            string wd = AppDomain.CurrentDomain.BaseDirectory;
+            string fixedConnectionString = c.ConnectionString.Replace("{AppDir}", AppDomain.CurrentDomain.BaseDirectory);
+            return fixedConnectionString;
+        }
+
+
         ////////////////To read data from query//////////////////////////////
         private static String ReadSingleRow(IDataRecord record)
         {
@@ -80,11 +94,30 @@ namespace WpfApp1.data
             {
                 connection.Open(); //Open connection with sql database
                 SqlCommand command = new SqlCommand();
-                command.CommandText = string.Format("INSERT INTO {0} ({1}) VALUES ({2})", table, col, val);
+                command.CommandText = string.Format($"INSERT INTO {table} ({col}) VALUES ({val})");
                 command.Connection = connection;
                 command.ExecuteNonQuery();
-
             }
+        }
+        
+        ///////////// Function returns a byte array representing an Image.////////////
+        public static byte[] ImageToByteArray(System.Drawing.Image imageIn)
+            //Changes an Image to a bytearray
+        {
+            using (var ms = new MemoryStream())
+            {
+                imageIn.Save(ms, imageIn.RawFormat);
+                return ms.ToArray();
+            }
+        }
+
+        ///////////////// Function returns an Image from Byte array. ////////////////
+        public static Image ByteArrayToImage(byte[] byteArrayIn)
+            //Changes a byte array to a Image
+        {
+            MemoryStream ms = new MemoryStream(byteArrayIn);
+            Image returnImage = Image.FromStream(ms);
+            return returnImage;
         }
     }
 }
