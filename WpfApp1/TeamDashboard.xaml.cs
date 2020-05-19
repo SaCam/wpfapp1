@@ -252,6 +252,7 @@ namespace WpfApp1
                 //add to button
                 BtnClicked.Content = NewImage;
                 BtnClicked.Background = Brushes.Transparent;
+                //add byte[] to player instance
                 players[$"player{lastChar}"].Img = DbHandler.ImageToByteArray(System.Drawing.Image.FromFile(op.FileName));
             }
 
@@ -321,12 +322,13 @@ namespace WpfApp1
             //Add players
             foreach (KeyValuePair<string, Player> player in players)
             {
-                DbHandler.StoreTable("player", "name,age,country,team_id,image", 
-                    $"'{player.Value.Name}'," +
-                    $"{player.Value.Age}," +
-                    $"'{player.Value.Country}'," +
-                    $"{teamId}," +
-                    $"{player.Value.Img}");
+                //DbHandler.StoreTable("player", "name,age,country,team_id,image", 
+                //    $"'{player.Value.Name}'," +
+                //    $"{player.Value.Age}," +
+                //    $"'{player.Value.Country}'," +
+                //    $"{teamId}," +
+                //    $"{player.Value.Img}");
+                DbHandler.StorePlayer(player.Value.Name, player.Value.Age, teamId, player.Value.Country, (byte[])player.Value.Img);
             }
         }
 
