@@ -29,10 +29,8 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="0" Grid.Column="0" Background="#2b6ea4" MouseDown="Window_MouseDown">
-        </Grid>
-
-        <Grid Grid.Row="0" Grid.Column="1" Background="#2b6ea4" MouseDown="Window_MouseDown">
+       
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Background="#2b6ea4" MouseDown="Window_MouseDown">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Background="Transparent" BorderThickness="0" Width="25" Name="min_button" Click="MinimizeButton_Click">
                     <Image Source="/Assets/mini.png" Height="10" Width="10"/>
