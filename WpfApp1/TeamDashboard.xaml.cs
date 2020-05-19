@@ -1,7 +1,8 @@
 ﻿using Microsoft.Win32;
 using WpfApp1.data;
-
+using WpfApp1.layout;
 using WpfApp1.classBin;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,9 +43,9 @@ namespace WpfApp1
 
             CreatePlayerBtnList();
 
-            SetBtnLayout(DefaultPlayerBtnContent, playerButtons); //Set player btn layout
-            SetBtnLayout(DefaultIglBtnContent, new List<Button>{ Button2 }); //Igl Button
-            SetBtnLayout(DefaultTeamBtnContent, new List<Button> { TeamButton }); // Set TeamButton content
+            SetBtnLayout(DefaultLayout.DefaultPlayerBtnContent, playerButtons); //Set player btn layout
+            SetBtnLayout(DefaultLayout.DefaultIglBtnContent, new List<Button>{ Button2 }); //Igl Button
+            SetBtnLayout(DefaultLayout.DefaultTeamBtnContent, new List<Button> { TeamButton }); // Set TeamButton content
 
             PopulatePlayerDict();
 
@@ -60,28 +61,6 @@ namespace WpfApp1
             playerButtons.Add(Button4);
         }
 
-        public void DefaultPlayerBtnContent(Button btn)
-            //Create a layout to be applied to a button
-        {
-            //Create placeholders
-            StackPanel playerLayout = new StackPanel();
-            Image ImagePlaceHolder = new Image();
-            TextBlock TextBlockPlaceHolder = new TextBlock();
-
-            //Configure placeholders
-            ImagePlaceHolder.Source = new BitmapImage(new Uri("/Assets/add_player.png", UriKind.RelativeOrAbsolute));
-            ImagePlaceHolder.Height = 40;
-            TextBlockPlaceHolder.Text = "Add Player";
-
-            playerLayout.Children.Add(ImagePlaceHolder);
-            playerLayout.Children.Add(TextBlockPlaceHolder);
-
-            //Button layout
-            btn.Content = "";
-            btn.Background = Brushes.LightGray;
-            btn.Content = playerLayout;
-        }
-
         public void SetBtnLayout(Layout layout, List<Button> buttons)
             //Apply layout to buttons in playerButton
             //use Layout delegate, so layout function has to returen an object
@@ -91,63 +70,6 @@ namespace WpfApp1
             {
                 layout(Btn);
             }
-        }
-
-        private void DefaultIglBtnContent(Button btn)
-            //Igl button content
-        {
-            //IGL place Holder ---------------------------------------
-            StackPanel IglStackPanelPlaceHolder = new StackPanel();
-            Image IglImagePlaceHolder = new Image();
-            Image IglImagePlaceHolderLogo = new Image();
-            TextBlock IglTextBlockPlaceHolder = new TextBlock();
-            Grid grid = new Grid();
-
-            //Configure placeholders
-            IglImagePlaceHolder.Source = new BitmapImage(new Uri("/Assets/add_player.png", UriKind.RelativeOrAbsolute));
-            IglImagePlaceHolder.Height = 40;
-
-            IglImagePlaceHolderLogo.Source = new BitmapImage(new Uri("/Assets/igl.png", UriKind.RelativeOrAbsolute));
-            IglImagePlaceHolderLogo.Height = 20;
-            IglImagePlaceHolderLogo.VerticalAlignment = VerticalAlignment.Bottom;
-            IglImagePlaceHolderLogo.HorizontalAlignment = HorizontalAlignment.Right;
-
-
-            IglTextBlockPlaceHolder.Text = "Add Player";
-            IglTextBlockPlaceHolder.HorizontalAlignment = HorizontalAlignment.Center;
-
-            IglStackPanelPlaceHolder.Children.Add(IglImagePlaceHolder);
-            IglStackPanelPlaceHolder.Children.Add(IglTextBlockPlaceHolder);
-            IglStackPanelPlaceHolder.VerticalAlignment = VerticalAlignment.Center;
-
-            grid.Children.Add(IglStackPanelPlaceHolder);
-            grid.Children.Add(IglImagePlaceHolderLogo);
-
-            btn.Content = "";
-            btn.Background = Brushes.LightGray;
-            btn.Content = grid;
-            btn.HorizontalContentAlignment = HorizontalAlignment.Stretch;
-            btn.VerticalContentAlignment = VerticalAlignment.Stretch;
-        }
-
-        private void DefaultTeamBtnContent(Button btn)
-        {
-            //Create placeholders
-            StackPanel StackPanelPlaceHolderTeam = new StackPanel();
-            Image ImagePlaceHolderTeam = new Image();
-            TextBlock TextBlockPlaceHolderTeam = new TextBlock();
-
-            //Configure placeholders
-            ImagePlaceHolderTeam.Source = new BitmapImage(new Uri("/Assets/logo.png", UriKind.RelativeOrAbsolute));
-            ImagePlaceHolderTeam.Height = 40;
-            TextBlockPlaceHolderTeam.Text = "Team Logo";
-
-            StackPanelPlaceHolderTeam.Children.Add(ImagePlaceHolderTeam);
-            StackPanelPlaceHolderTeam.Children.Add(TextBlockPlaceHolderTeam);
-
-            btn.Content = "";
-            btn.Background = Brushes.LightGray;
-            btn.Content = StackPanelPlaceHolderTeam;
         }
 
         public void ClearForm()
@@ -187,9 +109,9 @@ namespace WpfApp1
         public void ResetPlaceHolders(object sender, RoutedEventArgs e)
             //Reset all buttons
         {
-            SetBtnLayout(DefaultPlayerBtnContent, playerButtons); //Reset player btns to default
-            SetBtnLayout(DefaultIglBtnContent, new List<Button> { Button2 }); //Reset Igl button to default
-            SetBtnLayout(DefaultTeamBtnContent, new List<Button> { TeamButton }); // Set TeamButton content
+            SetBtnLayout(DefaultLayout.DefaultPlayerBtnContent, playerButtons); //Reset player btns to default
+            SetBtnLayout(DefaultLayout.DefaultIglBtnContent, new List<Button> { Button2 }); //Reset Igl button to default
+            SetBtnLayout(DefaultLayout.DefaultTeamBtnContent, new List<Button> { TeamButton }); // Set TeamButton content
 
             ClearForm(); //Clears the forms
         }
@@ -219,8 +141,6 @@ namespace WpfApp1
 
             //Show TeamInputForm
             TeamForm.Visibility = Visibility.Visible;
-
-
         }
 
         private void ShowInputForm(object sender, RoutedEventArgs e)
@@ -307,7 +227,6 @@ namespace WpfApp1
             {
                 players.Add($"player{i}", new Player());
             }
-            Console.WriteLine(players.Count);
         }
 
         private void SaveData()
@@ -321,14 +240,9 @@ namespace WpfApp1
 
             //Add players
             foreach (KeyValuePair<string, Player> player in players)
+                //Saves all player instances in database. An empty instance will result in an error
             {
-                //DbHandler.StoreTable("player", "name,age,country,team_id,image", 
-                //    $"'{player.Value.Name}'," +
-                //    $"{player.Value.Age}," +
-                //    $"'{player.Value.Country}'," +
-                //    $"{teamId}," +
-                //    $"{player.Value.Img}");
-                DbHandler.StorePlayer(player.Value.Name, player.Value.Age, teamId, player.Value.Country, (byte[])player.Value.Img);
+                DbHandler.StorePlayer(player.Value.Name, Convert.ToInt32(player.Value.Age), teamId, player.Value.Country, (byte[])player.Value.Img);
             }
         }
 

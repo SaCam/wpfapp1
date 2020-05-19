@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Documents;
 
 namespace WpfApp1.data
@@ -89,6 +90,7 @@ namespace WpfApp1.data
         }
 
         public static void StoreTable(string table, string col, string val)
+            //Can be used to store in a table that does not require any spacial actions
         {
             using (SqlConnection connection = new SqlConnection(CnnVal("localDbConnection")))
             {
@@ -97,6 +99,38 @@ namespace WpfApp1.data
                 command.CommandText = string.Format($"INSERT INTO {table} ({col}) VALUES ({val})");
                 command.Connection = connection;
                 command.ExecuteNonQuery();
+            }
+        }
+
+        public static void StorePlayer(string name, int age, int team_id, string country, byte[] byteArr)
+            //To store a player instance in the database
+        {
+            string query = "Insert Into Player (name, age, team_id, country, image) Values (@name, @age, @team_id, @country, @image)";
+
+            try
+                //Try to save to database
+            {
+                using (SqlConnection conn = new SqlConnection(CnnVal("localDbConnection")))
+                {
+                    SqlDataAdapter da = new SqlDataAdapter();
+                    da.InsertCommand = new SqlCommand(query, conn);
+                    da.InsertCommand.Parameters.Add("@name", SqlDbType.NVarChar).Value = name;
+                    da.InsertCommand.Parameters.Add("@age", SqlDbType.Int).Value = age;
+                    da.InsertCommand.Parameters.Add("@team_id", SqlDbType.Int).Value = team_id;
+                    da.InsertCommand.Parameters.Add("@country", SqlDbType.NVarChar).Value = country;
+                    da.InsertCommand.Parameters.Add("@image", SqlDbType.VarBinary).Value = byteArr;
+                    conn.Open();
+
+                    da.InsertCommand.ExecuteNonQuery();
+
+                    conn.Close();
+                }
+            }
+
+            catch (SqlException ex)
+                // If something goes wrond, Display to user
+            {
+                MessageBox.Show("Error Occured " + ex.Message);
             }
         }
         

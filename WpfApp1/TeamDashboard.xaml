@@ -63,7 +63,7 @@
             <TextBox Name="Country0"></TextBox>
         </StackPanel>
 
-        <StackPanel Grid.Row="1" Grid.Column="1" Margin="5 0 5 0" Visibility="Hidden" Name="InputForm1">
+        <StackPanel Grid.Row="1" Grid.Column="1" Margin="5 0 5 0" Visibility="Hidden" Name="InputForm1" LostFocus="LostFocusText">
             <TextBlock Text="Name:"></TextBlock>
             <TextBox Name="Player1"></TextBox>
 
@@ -74,7 +74,7 @@
             <TextBox Name="Country1"></TextBox>
         </StackPanel>
 
-        <StackPanel Grid.Row="1" Grid.Column="2" Margin="5 0 5 0" Visibility="Hidden" Name="InputForm2">
+        <StackPanel Grid.Row="1" Grid.Column="2" Margin="5 0 5 0" Visibility="Hidden" Name="InputForm2" LostFocus="LostFocusText">
             <TextBlock Text="Name:"></TextBlock>
             <TextBox Name="Player2"></TextBox>
 
@@ -85,7 +85,7 @@
             <TextBox Name="Country2"></TextBox>
         </StackPanel>
 
-        <StackPanel Grid.Row="1" Grid.Column="3" Margin="5 0 5 0" Visibility="Hidden" Name="InputForm3">
+        <StackPanel Grid.Row="1" Grid.Column="3" Margin="5 0 5 0" Visibility="Hidden" Name="InputForm3" LostFocus="LostFocusText">
             <TextBlock Text="Name:"></TextBlock>
             <TextBox Name="Player3"></TextBox>
 
@@ -96,7 +96,7 @@
             <TextBox Name="Country3"></TextBox>
         </StackPanel>
 
-        <StackPanel Grid.Row="1" Grid.Column="4" Margin="5 0 10 0" Visibility="Hidden" Name="InputForm4">
+        <StackPanel Grid.Row="1" Grid.Column="4" Margin="5 0 10 0" Visibility="Hidden" Name="InputForm4" LostFocus="LostFocusText">
             <TextBlock Text="Name:"></TextBlock>
             <TextBox Name="Player4"></TextBox>
 

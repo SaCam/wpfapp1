@@ -75,6 +75,7 @@
     <Compile Include="HighlightDashboard.xaml.cs">
       <DependentUpon>HighlightDashboard.xaml</DependentUpon>
     </Compile>
+    <Compile Include="layout\PlayerButtonLayout.cs" />
     <Compile Include="TeamDashboard.xaml.cs">
       <DependentUpon>TeamDashboard.xaml</DependentUpon>
     </Compile>
@@ -187,5 +188,6 @@
     <Resource Include="Assets\start_2.png" />
     <Resource Include="Assets\vid.mp4" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
