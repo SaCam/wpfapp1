@@ -66,21 +66,21 @@ namespace WpfApp1
             ItemMenu item0 = new ItemMenu("Dashboard", menuDashboard);
 
             //Loop through all teams <String> returned by Query
-            foreach (string Team in data.DbHandler.QTable("name", "Team"))
+            foreach (string Team in data.DbHandler.QTeam("name", "Team"))
             {
-                menuTeam.Add(new SubItem(Team)); //Add to List
+                menuTeam.Add(new SubItem(Team, new TeamOverview(Team))); //Add to List
             }
             ItemMenu item1 = new ItemMenu("Teams", menuTeam); //create variable of ItemMenu Object
 
             //Query Tournaments table and populate XAML element
-            foreach (string Team in data.DbHandler.QTable("name", "Tournament"))
+            foreach (string Team in data.DbHandler.QTeam("name", "Tournament"))
             {
                 menuTournaments.Add(new SubItem(Team)); //Add to List
             }
             ItemMenu item2 = new ItemMenu("Tournaments", menuTournaments);
 
             //Query Highlight table and populate XAML element (Table not available so query team table for now)
-            foreach (string Tour in data.DbHandler.QTable("name", "Team"))
+            foreach (string Tour in data.DbHandler.QTeam("name", "Team"))
             {
                 menuHighlights.Add(new SubItem(Tour));
             }

@@ -43,7 +43,7 @@ namespace WpfApp1.data
 
 
         ////////////////Method to Query "Team" table in Local database. By use of App.Config and connectionString.///////////////////
-        public static List<String> QTable(string col, string table)
+        public static List<String> QTeam(string col, string table)
         {
             //Variable to store List of teams in.
             List<String> colume = new List<String>();
@@ -56,6 +56,33 @@ namespace WpfApp1.data
 
                 //Create sql command
                 SqlCommand command = new SqlCommand(string.Format("SELECT {0} FROM {1}", col, table), connection);
+
+                //execute here
+                SqlDataReader dataReader = command.ExecuteReader();
+                // Call Read before accessing data.
+                while (dataReader.Read())
+                {
+                    colume.Add(ReadSingleRow((IDataRecord)dataReader));
+                }
+            }
+            //Return list of strings (Name of teams)
+            return colume;
+        }
+
+        public static List<string> QPlayers(int team_id)
+        {
+
+            //Variable to store List of teams in.
+            List<String> colume = new List<String>();
+
+            //Using closes connection automatically
+            using (SqlConnection connection = new SqlConnection(CnnVal("localDbConnection")))
+            {
+                //Open SQL connection (asynic)
+                connection.Open();
+
+                //Create sql command
+                SqlCommand command = new SqlCommand($"SELECT name,age FROM player WHERE team_id='{team_id}'", connection);
 
                 //execute here
                 SqlDataReader dataReader = command.ExecuteReader();
