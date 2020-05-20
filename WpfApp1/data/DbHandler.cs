@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
+using System.Windows.Media.Imaging;
 
 namespace WpfApp1.data
 {    
@@ -69,11 +70,11 @@ namespace WpfApp1.data
             return colume;
         }
 
-        public static List<string> QPlayers(int team_id)
+        public static List<Dictionary<string, object>> QPlayers(int team_id)
         {
-
             //Variable to store List of teams in.
-            List<String> colume = new List<String>();
+            List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+            Dictionary<string, object> column;
 
             //Using closes connection automatically
             using (SqlConnection connection = new SqlConnection(CnnVal("localDbConnection")))
@@ -82,18 +83,34 @@ namespace WpfApp1.data
                 connection.Open();
 
                 //Create sql command
-                SqlCommand command = new SqlCommand($"SELECT name,age FROM player WHERE team_id='{team_id}'", connection);
+                SqlCommand command = new SqlCommand($"SELECT name,age,country,image FROM player WHERE team_id='{team_id}'", connection);
 
                 //execute here
                 SqlDataReader dataReader = command.ExecuteReader();
                 // Call Read before accessing data.
                 while (dataReader.Read())
                 {
-                    colume.Add(ReadSingleRow((IDataRecord)dataReader));
+                    column = new Dictionary<string, object>();
+
+                    column["name"] = dataReader["NAME"].ToString();
+                    column["age"] = dataReader["AGE"].ToString();
+                    column["country"] = dataReader["COUNTRY"].ToString();
+                    column["image"] = dataReader["IMAGE"];
+
+                    rows.Add(column);
                 }
             }
             //Return list of strings (Name of teams)
-            return colume;
+            return rows;
+        }
+
+        public void QImage()
+            //To Query an image from the player database.
+        {
+            using (SqlConnection connection = new SqlConnection(CnnVal("localDbConnection")))
+            {
+                connection.Open();
+            }
         }
 
         ////////////////Row from Database///////////////////
