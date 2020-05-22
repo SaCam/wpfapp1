@@ -67,7 +67,14 @@
             
         </StackPanel>
 
-        
+        <StackPanel Grid.Row="2" Grid.Column="4" Margin="10 0 10 10" VerticalAlignment="Bottom">
+            <Button Background="#2b6ea4" Foreground="White" Margin="10 0 10 10">
+                <TextBlock>Delete</TextBlock>
+            </Button>
+            <Button Background="#2b6ea4" Foreground="White" Margin="10 0 10 10">
+                <TextBlock>Change</TextBlock>
+            </Button>
+        </StackPanel>
         
     </Grid>
 </UserControl>
