@@ -31,6 +31,7 @@ namespace WpfApp1
         private static List<Button> playerButtons { get; set; } = new List<Button>(); //List with button place holders
         private static Dictionary<string, Player> players { get; set; } = new Dictionary<string, Player>(); //Dictionary with players
         private static int teamId { get; set; }
+        private static byte[] teamImage { get; set; }
 
         //Class delegates
         public delegate void Layout(Button UI); //returns nothing, but takes a button as parameter
@@ -134,6 +135,7 @@ namespace WpfApp1
                 //Set image object attributes
                 NewImage.Source = new BitmapImage(new Uri(op.FileName, UriKind.RelativeOrAbsolute));
                 NewImage.Stretch = Stretch.Fill;
+                teamImage = DbHandler.ImageToByteArray(System.Drawing.Image.FromFile(op.FileName));
                 //add to button
                 BtnClicked.Content = NewImage;
                 BtnClicked.Background = Brushes.Transparent;
@@ -233,8 +235,7 @@ namespace WpfApp1
             //Save team and players to database
         {
             //add team
-            DbHandler.StoreTable("Team", "name,rank,country", String.Format("'{0}',{1},'{2}'", TeamName.Text, TeamRank.Text, TeamCountry.Text));
-
+            DbHandler.SaveTeam(TeamName.Text, Convert.ToInt32(TeamRank.Text), TeamCountry.Text, teamImage);
             //get Team id 
             teamId = DbHandler.Qid(TeamName.Text);
 

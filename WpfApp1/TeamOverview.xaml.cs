@@ -26,23 +26,31 @@ namespace WpfApp1
         public List<System.Windows.Controls.Image> PlayerPlaceHolders { get; set; } = new List<System.Windows.Controls.Image>();
         public List<StackPanel> playerInfo { get; set; } = new List<StackPanel>();
         public string _teamName {get; set;}
-        public List<Dictionary<string, object>> teamData { get; set; }
+        public Dictionary<string, object> _teamData { get; set; }
+        public List<Dictionary<string, object>> playerData { get; set; }
 
         public TeamOverview(string teamName)
         {
             InitializeComponent();
-            populatePlaceHolders();
+            PopulatePlaceHolders();
             populateStackPanels();
 
             _teamName = teamName;
 
-            int team_id = DbHandler.Qid(_teamName);
-            teamData = DbHandler.QPlayers(team_id);
+            _teamData = DbHandler.QTeam(_teamName);
+            playerData = DbHandler.QPlayers((int)_teamData["teamId"]);
 
-            setPlayerData();
+            SetPlayerData();
+            SetBackground();
         }
 
-        private void populatePlaceHolders()
+        private void SetBackground()
+        {
+            System.Drawing.Image _img = DbHandler.ByteArrayToImage((byte[])_teamData["image"]);
+            teamImg.Source = ConvertImgControl(_img);
+        }
+
+        private void PopulatePlaceHolders()
         {
             PlayerPlaceHolders.Add(player0);
             PlayerPlaceHolders.Add(player1);
@@ -60,11 +68,11 @@ namespace WpfApp1
             playerInfo.Add(info4);
         }
 
-        private void setPlayerData()
+        private void SetPlayerData()
             //sets player images from data base to Imageplace holders
         {
             var i = 0;
-            foreach (Dictionary<string, object> dict in teamData)
+            foreach (Dictionary<string, object> dict in playerData)
             {
                 //creat UIelements
                 TextBlock name = new TextBlock();
@@ -87,6 +95,7 @@ namespace WpfApp1
         }
 
         private System.Windows.Media.ImageSource ConvertImgControl(System.Drawing.Image _img)
+            //method to convert Image type from Drawing.Image to Windows.Controls.Image
         {
             System.Windows.Controls.Image img = new System.Windows.Controls.Image();
 

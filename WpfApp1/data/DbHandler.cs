@@ -70,6 +70,37 @@ namespace WpfApp1.data
             return colume;
         }
 
+        public static void SaveTeam(string name, int rank, string country, byte[] byteArr)
+            //To save a team in the database
+        {
+            string query = "Insert Into Team (name, rank, country, image) Values (@name, @rank, @country, @image)";
+
+            try
+            //Try to save to database
+            {
+                using (SqlConnection conn = new SqlConnection(CnnVal("localDbConnection")))
+                {
+                    SqlDataAdapter da = new SqlDataAdapter();
+                    da.InsertCommand = new SqlCommand(query, conn);
+                    da.InsertCommand.Parameters.Add("@name", SqlDbType.NVarChar).Value = name;
+                    da.InsertCommand.Parameters.Add("@rank", SqlDbType.Int).Value = rank;
+                    da.InsertCommand.Parameters.Add("@country", SqlDbType.NVarChar).Value = country;
+                    da.InsertCommand.Parameters.Add("@image", SqlDbType.VarBinary).Value = byteArr;
+                    conn.Open();
+
+                    da.InsertCommand.ExecuteNonQuery();
+
+                    conn.Close();
+                }
+            }
+
+            catch (SqlException ex)
+            // If something goes wrond, Display to user
+            {
+                MessageBox.Show("Error Occured " + ex.Message);
+            }
+        }
+
         public static List<Dictionary<string, object>> QPlayers(int team_id)
         {
             //Variable to store List of teams in.
@@ -104,12 +135,30 @@ namespace WpfApp1.data
             return rows;
         }
 
-        public void QImage()
-            //To Query an image from the player database.
+        public static Dictionary<string, object> QTeam(string name)
         {
+            Dictionary<string, object> column = new Dictionary<string, object>();
+            //Using closes connection automatically
             using (SqlConnection connection = new SqlConnection(CnnVal("localDbConnection")))
             {
+                //Open SQL connection (asynic)
                 connection.Open();
+
+                //Create sql command
+                SqlCommand command = new SqlCommand($"SELECT id,name,rank,country,image FROM team WHERE name='{name}'", connection);
+
+                //execute here
+                SqlDataReader dataReader = command.ExecuteReader();
+                // Call Read before accessing data.
+                while (dataReader.Read())
+                {
+                    column["teamId"] = dataReader["ID"];
+                    column["name"] = dataReader["NAME"].ToString();
+                    column["age"] = dataReader["RANK"].ToString();
+                    column["country"] = dataReader["COUNTRY"].ToString();
+                    column["image"] = dataReader["IMAGE"];
+                }
+                return column;
             }
         }
 
