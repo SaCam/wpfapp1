@@ -68,7 +68,7 @@ namespace WpfApp1
             //Loop through all teams <String> returned by Query
             foreach (string Team in data.DbHandler.QTeam("name", "Team"))
             {
-                menuTeam.Add(new SubItem(Team, new TeamOverview(Team))); //Add to List
+                menuTeam.Add(new SubItem(Team, new TeamOverview(Team,this))); //Add to List
             }
             ItemMenu item1 = new ItemMenu("Teams", menuTeam); //create variable of ItemMenu Object
 

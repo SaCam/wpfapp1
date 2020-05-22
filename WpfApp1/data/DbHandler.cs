@@ -246,5 +246,30 @@ namespace WpfApp1.data
             Image returnImage = Image.FromStream(ms);
             return returnImage;
         }
+
+        public static void DeleteTeam(int team_id)
+        {
+            using (SqlConnection connection = new SqlConnection(CnnVal("localDbConnection")))
+            {
+                connection.Open();
+
+                string queryTeam = $"DELETE FROM team WHERE id={team_id}";
+                string queryPlayer = $"DELETE FROM player WHERE team_id={team_id}";
+
+                SqlCommand cmdTeam = new SqlCommand(queryTeam, connection);
+                SqlCommand cmdPlayer = new SqlCommand(queryPlayer, connection);
+
+                try
+                {
+                    cmdTeam.ExecuteNonQuery();
+                    cmdPlayer.ExecuteNonQuery();
+                }
+                catch (SqlException ex)
+                // If something goes wrond, Display to user
+                {
+                    MessageBox.Show("Error Occured " + ex.Message);
+                }
+            }
+        }
     }
 }

@@ -28,10 +28,16 @@ namespace WpfApp1
         public string _teamName {get; set;}
         public Dictionary<string, object> _teamData { get; set; }
         public List<Dictionary<string, object>> playerData { get; set; }
+        public MainWindow _context { get; set; }
+        public UserControl screen { get; set; }
 
-        public TeamOverview(string teamName)
+        public TeamOverview(string teamName, MainWindow context = null)
         {
             InitializeComponent();
+
+            _context = context;
+            screen = new TeamDashboard(_context);
+
             PopulatePlaceHolders();
             populateStackPanels();
 
@@ -110,5 +116,11 @@ namespace WpfApp1
             return WpfBitmap;
         }
 
+        private void DeleteTeam(object sender, RoutedEventArgs e)
+        {
+            DbHandler.DeleteTeam((int)_teamData["teamId"]);
+            _context.Content.Children.Clear();
+            _context.Content.Children.Add(screen);
+        }
     }
 }
