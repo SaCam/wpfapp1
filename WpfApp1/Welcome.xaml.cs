@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,12 +21,26 @@ namespace WpfApp1
     /// </summary>
     public partial class Welcome : UserControl
     {
+        public string dirVid { get; set; }
+
         public Welcome()
         {
             InitializeComponent();
+
+            //set vid source
+            SetVid();
             // Initial volume is set to 0
             myMediaElement.Volume = 0;
         }
+
+        //get location of vid
+        public void SetVid()
+        {
+            string dir = WpfApp1.MainWindow.cwd;
+            myMediaElement.Source = new Uri($"{dir}\\Assets\\vid.mp4");
+        }
+
+
 
         // Start video Volume controls
         // Change the volume of the media.

@@ -1,5 +1,6 @@
 ﻿using BeautySolutions.View.ViewModel;
 using DropDownMenu;
+using System.Configuration;
 
 using System;
 using System.IO;
@@ -26,9 +27,14 @@ namespace WpfApp1
     {
         //Class properties
         public static List<ItemMenu> itemMenuList { get; set; } = new List<ItemMenu>();
+        public static String cwd { get; set; }
 
         public MainWindow()
         {
+            //Set the working directory
+            SetCwd();
+
+            //Initialize application components
             InitializeComponent();
 
             //Set frame to welcome content
@@ -37,6 +43,28 @@ namespace WpfApp1
             //initialize Menu
             CreateItems();
             InitMenu();
+        }
+
+        public void SetCwd()
+        {
+            //Current working direcotry
+            cwd = Directory.GetCurrentDirectory();
+            //split string into array
+            string[] cwdArr = cwd.Split('\\');
+            //Resize to drop 2 last values
+            Array.Resize(ref cwdArr, cwdArr.Length - 2);
+            //Join array to string and re-asign to cwd
+            cwd = String.Join("\\", cwdArr);
+
+            //get system config file object
+            System.Configuration.Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            //get connection string value
+            var curConStr = config.ConnectionStrings.ConnectionStrings[1].ConnectionString;
+            //change constr
+            string newConStr = curConStr.Replace("{cwd}", cwd);
+            //replace  and save new config
+            config.ConnectionStrings.ConnectionStrings[1].ConnectionString = newConStr;
+            config.Save(ConfigurationSaveMode.Modified);
         }
 
         public void ReinitMenu()

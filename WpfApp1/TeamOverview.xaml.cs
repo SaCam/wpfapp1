@@ -121,6 +121,7 @@ namespace WpfApp1
             DbHandler.DeleteTeam((int)_teamData["teamId"]);
             _context.Content.Children.Clear();
             _context.Content.Children.Add(screen);
+            _context.ReinitMenu();
         }
     }
 }
